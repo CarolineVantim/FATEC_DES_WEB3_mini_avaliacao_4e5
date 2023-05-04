@@ -14,7 +14,7 @@ def atividade(request):
                 'nome': a.nome,
                 'descricao': a.descricao
             }
-        return render(request, 'index.html', contexto)
+            return render(request, 'index.html', contexto)
     else:
         contexto = {
             'nome': False
