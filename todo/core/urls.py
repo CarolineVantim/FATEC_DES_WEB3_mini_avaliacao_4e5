@@ -3,5 +3,5 @@ from . import views
 
 urlpatterns = [
     path('',views.atividade),
-    path('',views.cadastro)
+    path('cadastro',views.cadastro)
 ]

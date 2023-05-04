@@ -1,16 +1,20 @@
 from django.shortcuts import render
-from .models import FeriadoModel
+from .models import AtividadeModel
+from django.utils import timezone
 import datetime
 
-data = datetime.date.today()
-qs = a.objects.all()
+dataatual = datetime.date.today()
+qs = AtividadeModel.objects.all()
+
 def atividade(request):
-    for f in qs:
-        if f.dia == data.day and f.mes == data.month:
+    for a in qs:
+        data = a.data
+        if data.day == dataatual.day and data.month == dataatual.month and data.year == dataatual.year:
             contexto = {
-                'nome': f.nome
+                'nome': a.nome,
+                'descricao': a.descricao
             }
-            return render(request, 'index.html', contexto)
+        return render(request, 'index.html', contexto)
     else:
         contexto = {
             'nome': False
