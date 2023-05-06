@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import AtividadeModel
+from .forms import AtividadeForm
 from django.utils import timezone
 import datetime
 
@@ -7,19 +8,37 @@ dataatual = datetime.date.today()
 qs = AtividadeModel.objects.all()
 
 def atividade(request):
+    atividades = {}
     for a in qs:
         data = a.data
         if data.day == dataatual.day and data.month == dataatual.month and data.year == dataatual.year:
-            contexto = {
-                'nome': a.nome,
-                'descricao': a.descricao
-            }
-            return render(request, 'index.html', contexto)
+            atividades[a.nome] = a.descricao
+
+    if len(atividades)>0:
+        contexto = {
+            'atividades': atividades
+        }
+        return render(request, 'index.html', contexto)
     else:
         contexto = {
-            'nome': False
+            'atividades': False
         }
         return render(request, 'index.html', contexto)
     
+
 def cadastro(request):
-    return render(request, 'cadastro.html')
+    if request.method == 'POST':
+        form = AtividadeForm(request.POST)
+
+        if form.is_valid():
+            AtividadeModel.objects.create(**form.cleaned_data)
+            contexto = {
+                'cadastro': True
+            }
+            return render(request, "cadastro.html", contexto)
+        else:
+            contexto = {'form': form}
+            return render(request, "cadastro.html", contexto)
+    else:
+        contexto = {'form': AtividadeForm}
+        return render(request, "cadastro.html", contexto)
